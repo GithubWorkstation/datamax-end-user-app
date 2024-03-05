@@ -1,0 +1,104 @@
+
+<div class="container-fluid mt-4" *ngIf="db.user.access < 1">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center justify-content-center w-100">
+            <img src="./../../../assets/access.svg" class="img-fluid" width="256px" height="256px" alt="">
+            <h4 class="mt-4 m-0">You have no permission to upload file</h4>
+            <span class="text-muted">Please contact with the technical team via mail</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt-4" *ngIf="db.user.access >= 1">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div *ngIf="true" class="d-flex flex-column align-items-center justify-content-center">
+            <img src="./../../../assets/uploader.svg" class="img-fluid" width="256px" height="256px" alt="">
+            <h4 class="mt-4">Select your file from local system</h4>
+            <span class="text-muted">All file formats are supported</span>
+
+            <input type="file" name="file" id="file" #fileUploader hidden (change)="onFileSelection($event)">
+            <button type="button" class="btn btn-success mt-4" (click)="fileUploader.click()">Browse File</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2" *ngIf="fileUrls !== null">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h4>Selected Files</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item px-0">
+              <div class="d-flex align-items-center w-100">
+                <i class="bi bi-file-earmark mr-2" style="font-size: 42px;"></i>
+                <div class="d-flex flex-column flex-grow-1">
+                  <h5 class="m-0 mb-1 text-wrap">{{ fileUrls.name }}</h5>
+                  <span class="text-muted">File Size: {{ fileUrls.size | filesizer:false }}</span>
+                </div>
+                <div class="d-flex justify-content-end flex-shrink-0" style="gap: 12px;">
+                  <button type="button" class="btn btn-md btn-outline-success" (click)="openModal(selectDirectoryModalRef)">Upload</button>
+                  <button type="button" class="btn btn-md btn-outline-danger" (click)="fileUrls = null;">Remove</button>
+                </div>
+              </div>
+            </li>
+            <!-- <li class="list-group-item px-0" *ngFor="let file of fileUrls; index as idx">
+              <div class="d-flex align-items-center w-100">
+                <i class="bi bi-file-earmark mr-2" style="font-size: 42px;"></i>
+                <div class="d-flex flex-column flex-grow-1">
+                  <h5 class="m-0 mb-1">{{ file.name }}</h5>
+                  <span class="text-muted">File Size: {{ file.size }}</span>
+                </div>
+                <div class="flex-shrink-0">
+                  <button type="button" class="btn btn-outline-danger rounded-pill">Remove</button>
+                </div>
+              </div>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #selectDirectoryModalRef let-modal>
+  <div class="modal-header border-0">
+    <div class="d-flex flex-column">
+      <h4 class="modal-title" id="modal-basic-title">Directories</h4>
+    <span class="text-sm text-muted text-wrap">By Default, file will be uploaded to root folder</span>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item px-0" *ngFor="let dir of directoriesList; index as idx" (click)="onListItemClicked(dir.filePath)">
+        <div class="d-flex w-100" style="gap: 8px;">
+          <i class="bi bi-collection" style="font-size: 24px;"></i>
+          <div class="d-flex flex-column flex-grow-1">
+            <h5 class="m-0 text-wrap">{{dir.fileName}}</h5>
+            <span class="text-sm text-muted">Created On: {{ dir.uploadedOn | date: "dd-MM-yyyy hh:mm a" }}</span>
+          </div>
+          <i class="bi" style="font-size: 24px;" [ngClass]="{
+            'bi-circle': selectedDirectories.value !== dir.filePath,
+            'bi-check-circle-fill text-primary': selectedDirectories.value === dir.filePath
+          }"></i>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer border-0">
+    <button type="button" class="btn btn-outline-dark float-right" (click)="uploadFile()">Upload</button>
+    
+  </div>
+</ng-template>

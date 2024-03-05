@@ -1,0 +1,51 @@
+<div class="container-fluid mt-4" *ngIf="db.user.access < 3">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center justify-content-center w-100">
+            <img src="./../../../assets/access.svg" class="img-fluid" width="256px" height="256px" alt="">
+            <h4 class="mt-4 m-0">You have no permission to create new folder</h4>
+            <span class="text-muted">Please contact with the technical team via mail</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt-4" *ngIf="db.user.access > 2">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center justify-content-center w-100">
+            <img src="./../../../assets/uploader.svg" class="img-fluid" width="256px" height="256px" alt="">
+            <h4 class="mt-4 m-0">Create New Folder</h4>
+            <span class="text-muted">All file formats are supported</span>
+
+            <div class="d-flex justify-content-center align-items-center mt-4 w-100" style="gap: 12px;">
+              <input type="text" name="folder" id="folder" class="form-control col-4" placeholder="eg: My Secret Data" [formControl]="folderNameControl">
+              <button type="button" class="btn btn-success" (click)="createNewFolderRequest()">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-12 mb-2">
+      <h5>Created Directories</h5>
+    </div>
+    <div class="col-12 col-sm-3" *ngFor="let dir of (db.directorySub | async); index as idx">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <h5 class="m-0 text-wrap">{{dir.fileName}}</h5>
+            <span class="text-sm text-muted">Created On: {{ dir.uploadedOn | date: "dd-MM-yyyy hh:mm a" }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
